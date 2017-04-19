@@ -1,0 +1,19 @@
+{
+  "name": "fps-utils",
+  "version": "0.9.1",
+  "description": "tera-proxy fps invader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saegusae/fps-utils.git"
+  },
+  "author": "Saegusae",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Saegusae/fps-utils/issues"
+  },
+  "homepage": "https://github.com/Saegusae/fps-utils#readme"
+}
