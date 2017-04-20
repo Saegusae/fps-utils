@@ -1,9 +1,9 @@
-/* Get rekt berstankel-sama */
+/* Get rekt bernkastel-sama */
 
 /*
 =========HOW TO USE==========
 Chat commands:
-/fps [preset]
+fps [preset]
 increase the preset (maximum 3)
 to enable density of the fps
 increase
@@ -34,7 +34,7 @@ module.exports = function FPSUtils(dispatch) {
 
     dispatch.hook('S_PCBANGINVENTORY_DATALIST', 1, function(event) {
         for(let item of event.inventory)
-            if (item.item === nostrum) {
+            if (item.item == nostrum) {
                 item.cooldown = 0;
                 return true;
             }
@@ -59,7 +59,7 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 2) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        dispatch.toClient('S_SPAWN_USER', '*', hiddenPlayers[hiddenIndex[i]]);
+                                        dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
                                     }
                                 }
                             }
@@ -74,7 +74,7 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 2) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        dispatch.toClient('S_SPAWN_USER', '*', hiddenPlayers[hiddenIndex[i]]);
+                                        dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
                                     }
                                 }
                             }
@@ -87,7 +87,7 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 0 || lastlagstate == 1) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        dispatch.toClient('S_DESPAWN_USER', '*', {
+                                        dispatch.toClient('S_DESPAWN_USER', 2, {
                                             target: hiddenPlayers[hiddenIndex[i]].cid,
                                             type: 1,
                                         });
@@ -126,7 +126,7 @@ module.exports = function FPSUtils(dispatch) {
         zmr = 0;
     });
 
-    dispatch.hook('S_SPAWN_USER', '*', function(event) {
+    dispatch.hook('S_SPAWN_USER', 3, function(event) {
         if(hiddenPlayers[event.cid] != "block") {
             hiddenIndex[zmr] = event.cid;
             zmr++;
@@ -137,14 +137,14 @@ module.exports = function FPSUtils(dispatch) {
         }
     });
 
-    dispatch.hook('S_DESPAWN_USER', '*', function(event) {
+    dispatch.hook('S_DESPAWN_USER', 2, function(event) {
         hiddenPlayers[event.target] = "block";
         if(lagstate == 2) {
             return false;
         }
     });
 
-    dispatch.hook('S_USER_LOCATION', '*', function(event) {
+    dispatch.hook('S_USER_LOCATION', 1, function(event) {
         hiddenPlayers[event.target].x = event.x2;
 		hiddenPlayers[event.target].y = event.y2;
 		hiddenPlayers[event.target].z = event.z2;
