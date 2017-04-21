@@ -1,4 +1,5 @@
 /* Get rekt bernkastel-sama */
+// It's ok we buds now xd.
 
 /*
 =========HOW TO USE==========
@@ -18,7 +19,8 @@ module.exports = function FPSUtils(dispatch) {
     let player,
         cid,
         model,
-        job;
+        job,
+        character = {};
 
     let lagstate = 0,
         lastlagstate = 0,
@@ -26,10 +28,21 @@ module.exports = function FPSUtils(dispatch) {
         hiddenIndex = [],
         zmr = 0;
 
+    let flags = {
+            me: false,
+            enableHealers: false,
+            enableTanks: false
+    };
+
+    function getClass(mdl) {
+        return (mdl - 10101) % 100;
+    }
+
     dispatch.hook('S_LOGIN', 1, function(event) {
         ({cid, model} = event);
         player = event.name;
         job = (model - 10101) % 100;
+        character = event;
     });
 
     dispatch.hook('S_PCBANGINVENTORY_DATALIST', 1, function(event) {
@@ -50,8 +63,8 @@ module.exports = function FPSUtils(dispatch) {
 
                 if (command.length > 1) {
 
-                    switch(parseInt(command[1])) {
-                        case 0:
+                    switch(command[1]) {
+                        case "0":
                             lagstate = 0;
                             log('fps-utils optimization disabled by client.');
                             systemMsg('optimization disabled by user. [0]');
@@ -59,13 +72,17 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 2) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
+                                        if(!flags.me)
+                                            dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
+                                        else {
+                                            spawnMe(hiddenPlayers[hiddenIndex[i]]);
+                                        }
                                     }
                                 }
                             }
 
                             return false;
-                        case 1:
+                        case "1":
                             lagstate = 1;
                             log('fps-utils optimization set to stage 1, disabling skill animations.');
                             systemMsg('optimization set to remove skill animations. [1]');
@@ -74,12 +91,16 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 2) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
+                                        if(!flags.me)
+                                            dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
+                                        else {
+                                            spawnMe(hiddenPlayers[hiddenIndex[i]]);
+                                        }
                                     }
                                 }
                             }
 
-                        case 2:
+                        case "2":
                             lagstate = 2;
                             log('fps-utils optimization set to stage 2, disabling other player models.');
                             systemMsg('optimization set to remove other player models [2]');
@@ -96,10 +117,16 @@ module.exports = function FPSUtils(dispatch) {
                             }
 
                             return false;
-                        case 3:
+                        case "3":
                             lagstate = 2;
                             log('fps-utils optimization set to stage 3, idk what to do. Set back to stage 2.'); //TODO
                             systemMsg('stage 3 is still WIP reverted back to stage 2. [2]');
+                            return false;
+                        case "me":
+                            lagstate = lastlagstate;
+                            //flags.me = !flags.me;
+                            log('fps-utils toggled me mode. ' + flags.me);
+                            systemMsg('setting "me" toggled by user. ' + flags.me);
                             return false;
                         default:
                             lagstate = lastlagstate;
@@ -127,14 +154,18 @@ module.exports = function FPSUtils(dispatch) {
     });
 
     dispatch.hook('S_SPAWN_USER', 3, function(event) {
+
         if(hiddenPlayers[event.cid] != "block") {
             hiddenIndex[zmr] = event.cid;
             zmr++;
         }
+
         hiddenPlayers[event.cid] = event;
-        if(lagstate === 2) {
+
+        if(lagstate == 2) {
             return false;
         }
+
     });
 
     dispatch.hook('S_DESPAWN_USER', 2, function(event) {
@@ -169,6 +200,12 @@ module.exports = function FPSUtils(dispatch) {
         if((lagstate == 1 || lagstate == 2) && (hiddenPlayers[event.source] == "block" || hiddenPlayers[event.source]))
             return false;
     });
+
+    function spawnMe(sweg) {
+
+        dispatch.toClient('S_SPAWN_USER', 3, sweg);
+
+    }
 
     function log(msg) {
         console.log('[fps-utils] ' + msg);
