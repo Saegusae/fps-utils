@@ -72,11 +72,7 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 2) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        if(!flags.me)
                                             dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
-                                        else {
-                                            spawnMe(hiddenPlayers[hiddenIndex[i]]);
-                                        }
                                     }
                                 }
                             }
@@ -91,11 +87,7 @@ module.exports = function FPSUtils(dispatch) {
                             if(lastlagstate == 2) {
                                 for(i = 0; i < zmr; i++) {
                                     if(hiddenPlayers[hiddenIndex[i]] != "block") {
-                                        if(!flags.me)
                                             dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[hiddenIndex[i]]);
-                                        else {
-                                            spawnMe(hiddenPlayers[hiddenIndex[i]]);
-                                        }
                                     }
                                 }
                             }
@@ -201,11 +193,6 @@ module.exports = function FPSUtils(dispatch) {
             return false;
     });
 
-    function spawnMe(sweg) {
-
-        dispatch.toClient('S_SPAWN_USER', 3, sweg);
-
-    }
 
     function log(msg) {
         console.log('[fps-utils] ' + msg);
