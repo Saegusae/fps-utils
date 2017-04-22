@@ -10,6 +10,7 @@ to enable density of the fps
 increase
 */
 
+const config = require('./config.json');
 const format = require('./format.js');
 
 module.exports = function FPSUtils(dispatch) {
@@ -55,9 +56,12 @@ module.exports = function FPSUtils(dispatch) {
 
     dispatch.hook('C_CHAT', 1, function(event) {
 
+        if(event.authorName != player || format.stripTags(event.message).split('')[0] != config.prefix)
+            return;
+
             let command = format.stripTags(event.message).split(' ');
 
-            if(command[0] === 'fps') {
+            if(command[0] === config.prefix + 'fps') {
 
                 lastlagstate = lagstate;
 
