@@ -56,12 +56,9 @@ module.exports = function FPSUtils(dispatch) {
 
     dispatch.hook('C_CHAT', 1, function(event) {
 
-        if(event.authorName != player || format.stripTags(event.message).split('')[0] != config.prefix)
-            return;
-
             let command = format.stripTags(event.message).split(' ');
 
-            if(command[0] === config.prefix + 'fps') {
+            if(command[0] === 'fps') {
 
                 lastlagstate = lagstate;
 
