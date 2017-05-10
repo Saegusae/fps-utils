@@ -9,12 +9,28 @@
 * Now you have access to fps-utils commands
 
 ## Commands:
-* **fps:**
-    * **usage:** fps [arg]
-    * **valid arguments:** 0, 1, 2
+* **!fps:**
+    * **usage:** !fps [arg] [opt. arg2]
+    * **valid arguments:** 0, 1, 2, me, show, hide, help
     * **description:** Toggles between fps-utils states to interact with the game client in various ways to improve fps, input 0 as argument to disable.
-    * **state 1:** All skill and cast animations aside from user skills are disabled, other player models still shown moving even while using said disabled skills.
-    * **state 2:** (This is what I call Icaruna mode) Completely hide other player models, increases fps substentially, all skill animations and player models disabled. (please don't use in Harrowhold for obvious reasons)
+* **!fps 0:** disable main states, and spawn all non-blocked players.
+* **!fps 1:** enable fps state 1 and remove skill particles and projectiles.
+* **!fps 2:** enable fps state 2 and remove all skill animations.
+* **!fps 3:** enable fps state 3 and remove any and all players from your screen.
+* **!fps hide:**
+    * **usage:** !fps hide [arg1]
+    * **valid arguments:** dps, healers, tanks, any username
+    * **description:** Hide a certain role or any user individually
+    * **planned:** !fps list - list hidden individuals.
+* **!fps show:**
+    * **usage:** !fps show [arg1]
+    * **valid arguments:** dps, healers, tanks, any username
+    * **description:** see fps-hide
+* **!fps me:** WIP - enable me mode to save bandwidth.
+
 
 ## Work In Progress:
-* More arguments for the 'fps' command. As in exclude tanks and/or healers in disabled models.
+* Me mode.
+* Overall improvements.
+* Save configuration upon exit to remember last state.
+* button toggle between fps states 0-1-2-3
