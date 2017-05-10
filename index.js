@@ -54,10 +54,11 @@ module.exports = function FpsUtils(dispatch) {
     function handleCommands(event) {
 
         let command = format.stripTags(event.message).split(' ');
-        lastState = state;
 
         if(command[0] !== '!fps')
             return;
+
+        lastState = state;
 
         if(command.length > 1) {
             let arg = command[1];
@@ -259,6 +260,14 @@ module.exports = function FpsUtils(dispatch) {
                         }
                     }
                     break;
+                // List the players in individuals list.
+                case "list":
+                    let hiddenArray = [];
+                    for(let pl in hiddenIndividual) {
+                        hiddenArray.push(hiddenIndividual[pl].name);
+                    }
+                    systemMsg(`Manually hidden players: ${hiddenArray}`);
+                    break;
                 // Command not recognized
                 default:
                     systemMsg('Command not recognized. use [!fps help] for a list of available commands');
@@ -293,6 +302,7 @@ module.exports = function FpsUtils(dispatch) {
         ({cid, model} = event);
         player = event.name;
         clss = getClass(event.model);
+        state = config.savedOptions.state || 0;
     });
 
     dispatch.hook('S_LOAD_TOPO', 1, (event) => {
@@ -327,7 +337,7 @@ module.exports = function FpsUtils(dispatch) {
 
         // If me-mode is enabled spawn everyone as yourself.
         if(flags.me && appearence) {
-            event.model = model;
+            //event.model = model;
             return true;
         }
 
