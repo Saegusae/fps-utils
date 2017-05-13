@@ -307,7 +307,7 @@ module.exports = function FpsUtils(dispatch) {
         ({cid, model} = event);
         player = event.name;
         clss = getClass(event.model);
-        state = config.savedOptions.state || 0;
+        state = config.state || 0;
     });
 
     dispatch.hook('S_LOAD_TOPO', 1, (event) => {
