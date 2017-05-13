@@ -314,6 +314,8 @@ module.exports = function FpsUtils(dispatch) {
         // Add players in proximity of user to possible hide list.
         hiddenPlayers[event.cid] = event;
 
+        loc[event.cid] = {};
+
         loc[event.cid].x = event.x;
         loc[event.cid].y = event.y;
 
