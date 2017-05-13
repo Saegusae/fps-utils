@@ -57,6 +57,7 @@ module.exports = function FpsUtils(dispatch) {
                 // Set state to 0: Disabled.
                 case "0":
                     state = 0;
+                    config.state = 0;
                     log('fps-utils optimization disabled by client.');
                     systemMsg('optimization disabled by user. [0]');
 
@@ -73,6 +74,7 @@ module.exports = function FpsUtils(dispatch) {
                 // Set state to 1: Only hide projectiles.
                 case "1":
                     state = 1;
+                    config.state = 1;
                     log('fps-utils optimization set to stage 1, disabling skill particles.');
                     systemMsg('optimization set to remove skill particles. [1]');
 
@@ -89,6 +91,7 @@ module.exports = function FpsUtils(dispatch) {
                 // Set state to 2: Hide all skill animations.
                 case "2":
                     state = 2;
+                    config.state = 2;
                     log('fps-utils optimization set to stage 2, disabling skill animations.');
                     systemMsg('optimization set to remove skill animations. [2]');
 
@@ -104,6 +107,7 @@ module.exports = function FpsUtils(dispatch) {
                 // Set state to 3: Hide all other players.
                 case "3":
                     state = 3;
+                    config.state = 3;
                     log('fps-utils optimization set to stage 3, disabling other player models.');
                     systemMsg('optimization set to remove other player models [3]');
 
@@ -198,6 +202,7 @@ module.exports = function FpsUtils(dispatch) {
                                         if(hiddenPlayers[pl].name.toString().toLowerCase() === arg2.toString().toLowerCase()) {
                                             systemMsg(`player ${hiddenPlayers[pl].name} is added to the hiding list.`)
                                             hiddenIndividual[hiddenPlayers[pl].cid] = hiddenPlayers[pl];
+                                            config.hiddenPeople.push(hiddenPlayers[pl].name.toString());
                                             dispatch.toClient('S_DESPAWN_USER', 2, {
                                                 target: hiddenPlayers[pl].cid,
                                                 type: 1
@@ -243,6 +248,7 @@ module.exports = function FpsUtils(dispatch) {
                                         if(arg2.toString().toLowerCase() === hiddenIndividual[pl].name.toString().toLowerCase()) {
                                             systemMsg(`showing player ${hiddenIndividual[pl].name}.`);
                                             if(!hiddenPlayers[pl].block) {
+                                                config.hiddenPeople.splice(config.indexOf(hiddenPlayers[pl].name), 1);
                                                 dispatch.toClient('S_SPAWN_USER', 3, hiddenIndividual[pl]);
                                                 delete hiddenIndividual[pl];
                                             }
@@ -374,31 +380,32 @@ module.exports = function FpsUtils(dispatch) {
 
     dispatch.hook('S_ACTION_STAGE', 1, (event) => {
         // If state is higher than state1 remove all skill animations.
-        if(state == 2 && (event.x - loc[event.source].x > 25 || loc[event.source].x - event.y > 25 || event.y - loc[event.source].y > 25 || loc[event.source].y - event.y > 25)) {
+        if(event.source.toString() !== cid.toString())
+            if(state == 2 && (event.x - loc[event.source].x > 25 || loc[event.source].x - event.y > 25 || event.y - loc[event.source].y > 25 || loc[event.source].y - event.y > 25)) {
 
-            // Update entity locations for your client.
-            dispatch.toClient('S_USER_LOCATION', 1, {
-                target: event.source,
-                x1: loc[event.source].x,
-                y1: loc[event.source].y,
-                z1: event.z,
-                w:  event.w,
-                unk2: 0,
-                speed: 300,
-                x2: event.x,
-                y2: event.y,
-                z2: event.z,
-                type: 0,
-                unk: 0
-            });
+                // Update entity locations for your client.
+                dispatch.toClient('S_USER_LOCATION', 1, {
+                    target: event.source,
+                    x1: loc[event.source].x,
+                    y1: loc[event.source].y,
+                    z1: event.z,
+                    w:  event.w,
+                    unk2: 0,
+                    speed: 300,
+                    x2: event.x,
+                    y2: event.y,
+                    z2: event.z,
+                    type: 0,
+                    unk: 0
+                });
 
-            // Update entity locations in differential objects.
-            loc[event.source].x = event.x;
-            loc[event.source].y = event.y;
+                // Update entity locations in differential objects.
+                loc[event.source].x = event.x;
+                loc[event.source].y = event.y;
 
-            // This is unneeded as the state below should work anyways.
-            return false;
-        }
+                // This is unneeded as the state below should work anyways.
+                return false;
+            }
         
         if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
             return false;
