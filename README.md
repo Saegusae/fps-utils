@@ -21,16 +21,16 @@
     * **usage:** !fps hide [arg1]
     * **valid arguments:** dps, healers, tanks, any username
     * **description:** Hide a certain role or any user individually
-    * **planned:** !fps list - list hidden individuals.
 * **!fps show:**
     * **usage:** !fps show [arg1]
     * **valid arguments:** dps, healers, tanks, any username
     * **description:** see fps-hide
-* **!fps me:** WIP - enable me mode to save bandwidth.
+* **!fps list:**
+    * **usage:** !fps list
+    * **description:** List individual players you're currently hiding with !fps hide
 
 
 ## Work In Progress:
-* Me mode.
 * Overall improvements.
 * Save configuration upon exit to remember last state.
 * button toggle between fps states 0-1-2-3
