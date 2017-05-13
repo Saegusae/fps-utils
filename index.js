@@ -2,13 +2,18 @@
 //  FpsUtils revision1.2 - Saegusa
 //  New iterations through player objects,
 //  Should be around 3x faster in process speed.
+//  Read README.md for more info about how to use.
 //  Thanks: Bernkastel - PinkiePie for ideas.
 */
 
-const config = require('./config.json');
+var config = require('./config.json');
 const format = require('./format.js');
 
+const fs = require('fs');
+
 module.exports = function FpsUtils(dispatch) {
+
+    let DEBUG = config.debug || false;
 
     let player,
         cid,
@@ -18,19 +23,8 @@ module.exports = function FpsUtils(dispatch) {
     let state = 0,
         lastState = 0,
         hiddenPlayers = {},
-        hiddenIndividual = {};
-
-    let appearence = {
-        app: null,
-        weaponModel: null,
-        chestModel: null,
-        glovesModel: null,
-        bootsModel: null,
-        hairAdornment: null,
-        mask: null,
-        back: null,
-        costume: null
-    };
+        hiddenIndividual = {},
+        loc = {};
 
     let flags = {
         me: false,
@@ -41,11 +35,7 @@ module.exports = function FpsUtils(dispatch) {
         }
     };
 
-    const classes = {
-        dps: [1, 3, 4, 5, 6, 9, 10, 12, 13],
-        healers: [7, 8],
-        tanks: [2, 11]
-    }
+    const classes = config.classes;
 
     function getClass(m) {
         return (m - 10101) % 100;
@@ -148,6 +138,10 @@ module.exports = function FpsUtils(dispatch) {
                         }
 
                     break;
+                // Save configuration to file.
+                case "save":
+
+                    break; 
                 // Toggle individual classes on and off
                 case "hide":
                     if(command.length < 3) {
@@ -283,7 +277,8 @@ module.exports = function FpsUtils(dispatch) {
     }
 
     function log(msg) {
-        console.log('[fps-utils] ' + msg);
+        if(DEBUG)
+            console.log('[fps-utils] ' + msg);
     }
 
     function systemMsg(msg) {
@@ -296,6 +291,10 @@ module.exports = function FpsUtils(dispatch) {
             authorName: '',
             message: ' (fps-utils) ' + msg
         });
+    }
+
+    function saveConfig() {
+        
     }
 
     dispatch.hook('S_LOGIN', 2, (event) => {
@@ -314,6 +313,9 @@ module.exports = function FpsUtils(dispatch) {
 
         // Add players in proximity of user to possible hide list.
         hiddenPlayers[event.cid] = event;
+
+        loc[event.cid].x = event.x;
+        loc[event.cid].y = event.y;
 
         // Check the state or if the individual is hidden.
         if(state === 3 || hiddenIndividual[event.cid]) {
@@ -356,14 +358,38 @@ module.exports = function FpsUtils(dispatch) {
         hiddenPlayers[event.target].y = event.y2;
         hiddenPlayers[event.target].z = event.z2;
         hiddenPlayers[event.target].w = event.w;
+        loc[event.target].x = event.x2;
+        loc[event.target].y = event.y2;
 
-        if(state === 3 || hiddenIndividual[event.target]) {
+        if(state > 2 || hiddenIndividual[event.target]) {
             return false;
         }
     });
 
     dispatch.hook('S_ACTION_STAGE', 1, (event) => {
         // If state is higher than state1 remove all skill animations.
+        if(state == 2 && (event.x - loc[event.source].x > 25 || loc[event.source].x - event.y > 25 || event.y - loc[event.source].y > 25 || loc[event.source].y - event.y > 25)) {
+
+            dispatch.toClient('S_USER_LOCATION', 1, {
+                target: event.source,
+                x1: loc[event.source].x,
+                y1: loc[event.source].y,
+                z1: event.z,
+                w:  event.w,
+                unk2: 0,
+                speed: 300,
+                x2: event.x,
+                y2: event.y,
+                z2: event.z,
+                type: 0,
+                unk: 0
+            });
+
+            loc[event.source].x = event.x;
+            loc[event.source].y = event.y;
+
+        }
+        
         if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
             return false;
     });
