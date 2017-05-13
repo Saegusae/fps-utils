@@ -2,6 +2,7 @@
 //  FpsUtils revision1.2 - Saegusa
 //  New iterations through player objects,
 //  Should be around 3x faster in process speed.
+//  Also added a bunch more commands and functions
 //  Read README.md for more info about how to use.
 //  Thanks: Bernkastel - PinkiePie for ideas.
 */
@@ -26,7 +27,6 @@ module.exports = function FpsUtils(dispatch) {
         hiddenIndividual = {};
 
     let flags = {
-        me: false,
         hide: {
             tanks: false,
             healers: false,
@@ -63,7 +63,7 @@ module.exports = function FpsUtils(dispatch) {
                     if(lastState > 2) {
                         // Display all hidden players.
                         for(let pl in hiddenPlayers) {
-                            if(!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid]) {
+                            if(!hiddenIndividual[hiddenPlayers[pl].cid]) {
                                 dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[pl]);
                             }
                         }
@@ -80,7 +80,7 @@ module.exports = function FpsUtils(dispatch) {
                     if(lastState > 2) {
                         // Display all hidden players. EXCEPT HIDDEN INDIVIDUALS
                         for(let pl in hiddenPlayers) {
-                            if(!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid]) {
+                            if(!hiddenIndividual[hiddenPlayers[pl].cid]) {
                                 dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[pl]);
                             }
                         }
@@ -97,7 +97,7 @@ module.exports = function FpsUtils(dispatch) {
                     // Spawn all players with disabled animations.
                     if(lastState > 2) {
                         for(let pl in hiddenPlayers) {
-                            if(!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid]) {
+                            if(!hiddenIndividual[hiddenPlayers[pl].cid]) {
                                 dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[pl]);
                             }
                         }
@@ -113,7 +113,7 @@ module.exports = function FpsUtils(dispatch) {
                     if(lastState < 3) {
                         // Hide all players on screen and disable spawn.
                         for(let pl in hiddenPlayers) {
-                            if(!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid]) {
+                            if(!hiddenIndividual[hiddenPlayers[pl].cid]) {
                                 dispatch.toClient('S_DESPAWN_USER', 2, {
                                     target: hiddenPlayers[pl].cid,
                                     type: 1
@@ -122,28 +122,9 @@ module.exports = function FpsUtils(dispatch) {
                         }
                     }
                     break;
-                // Toggle flag me: Turn all the players to your character.
-                case "me":
-                    flags.me = !flags.me;
-                    log('fps-utils me mode toggled ' + flags.me);
-                    systemMsg(`toggled me mode ${flags.me}.`);
-
-                        if(state < 3) {
-                            for(let pl in hiddenPlayers) {
-                                if(!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid]) {
-                                    dispatch.toClient('S_DESPAWN_USER', 2, {
-                                        target: hiddenPlayers[pl].cid,
-                                        type: 1
-                                    });
-                                    dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[pl]);
-                                }
-                            }
-                        }
-
-                    break;
                 // Save configuration to file.
                 case "save":
-
+                    saveConfig();
                     break; 
                 // Toggle individual classes on and off
                 case "hide":
@@ -187,7 +168,7 @@ module.exports = function FpsUtils(dispatch) {
 
                                     flags.hide.tanks = true;
                                     for (let pl in hiddenPlayers) {
-                                        if((!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid]) && classes.tanks.indexOf(getClass(hiddenPlayers[pl].model)) > -1) {
+                                        if(!hiddenIndividual[hiddenPlayers[pl].cid] && classes.tanks.indexOf(getClass(hiddenPlayers[pl].model)) > -1) {
                                             dispatch.toClient('S_DESPAWN_USER', 2, {
                                                 target: hiddenPlayers[pl].cid,
                                                 type: 1
@@ -235,7 +216,7 @@ module.exports = function FpsUtils(dispatch) {
                                         systemMsg(`showing ${arg2}`);
                                         for(let pl in hiddenPlayers) {
                                             if(classes[arg2.toString()].indexOf(getClass(hiddenPlayers[pl].model)) > -1) {
-                                                if(!hiddenPlayers[pl].block || !hiddenIndividual[hiddenPlayers[pl].cid])
+                                                if(!hiddenIndividual[hiddenPlayers[pl].cid])
                                                     dispatch.toClient('S_SPAWN_USER', 3, hiddenPlayers[pl]);
                                             }
                                         }
@@ -246,12 +227,9 @@ module.exports = function FpsUtils(dispatch) {
                                     for(let pl in hiddenIndividual) {
                                         if(arg2.toString().toLowerCase() === hiddenIndividual[pl].name.toString().toLowerCase()) {
                                             systemMsg(`showing player ${hiddenIndividual[pl].name}.`);
-                                            if(!hiddenPlayers[pl].block) {
-                                                config.hiddenPeople.splice(config.indexOf(hiddenPlayers[pl].name), 1);
-                                                dispatch.toClient('S_SPAWN_USER', 3, hiddenIndividual[pl]);
-                                                delete hiddenIndividual[pl];
-                                            }
-
+                                            config.hiddenPeople.splice(config.hiddenPeople.indexOf(hiddenPlayers[pl].name), 1);
+                                            dispatch.toClient('S_SPAWN_USER', 3, hiddenIndividual[pl]);
+                                            delete hiddenIndividual[pl];
                                         }
                                     }
                                     break;
@@ -282,8 +260,7 @@ module.exports = function FpsUtils(dispatch) {
     }
 
     function log(msg) {
-        if(DEBUG)
-            console.log('[fps-utils] ' + msg);
+        if(DEBUG) console.log('[fps-utils] ' + msg);
     }
 
     function systemMsg(msg) {
@@ -299,7 +276,7 @@ module.exports = function FpsUtils(dispatch) {
     }
 
     function saveConfig() {
-        
+        fs.writeFile('./config.json', config, 'utf8', (err) => { if(!err) log("config file overwritten successfully"); });
     }
 
     dispatch.hook('S_LOGIN', 2, (event) => {
@@ -337,12 +314,6 @@ module.exports = function FpsUtils(dispatch) {
         // Why would you want this on, seriously...
         if(flags.hide.healers && classes.healers.indexOf(getClass(event.model)) > -1) {
             return false;
-        }
-
-        // If me-mode is enabled spawn everyone as yourself.
-        if(flags.me && appearence) {
-            //event.model = model;
-            return true;
         }
 
     });
