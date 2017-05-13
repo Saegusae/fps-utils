@@ -388,6 +388,7 @@ module.exports = function FpsUtils(dispatch) {
             loc[event.source].x = event.x;
             loc[event.source].y = event.y;
 
+            return false;
         }
         
         if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
@@ -396,8 +397,8 @@ module.exports = function FpsUtils(dispatch) {
 
     dispatch.hook('S_ACTION_END', 1, (event) => {
         // If we're removing skill animations we should ignore the end packet too.
-        if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
-            return false;
+        //if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
+            //return false;
     });
 
     dispatch.hook('S_START_USER_PROJECTILE', 1, (event) => {
