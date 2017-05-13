@@ -34,3 +34,7 @@
 * Overall improvements.
 * Save configuration upon exit to remember last state.
 * button toggle between fps states 0-1-2-3
+
+## Notes:
+
+Apparently !fps 2 mode is bugged somewhat in the current version, I am working on fixes to the desyncing issues that come with it.
