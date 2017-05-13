@@ -307,6 +307,7 @@ module.exports = function FpsUtils(dispatch) {
     dispatch.hook('S_LOAD_TOPO', 1, (event) => {
         // Refresh the hide list upon teleport or zone change.
         hiddenPlayers = {};
+        loc = {};
     });
 
     dispatch.hook('S_SPAWN_USER', 3, (event) => {
@@ -314,10 +315,10 @@ module.exports = function FpsUtils(dispatch) {
         // Add players in proximity of user to possible hide list.
         hiddenPlayers[event.cid] = event;
 
-        loc[event.cid] = {};
-
-        loc[event.cid].x = event.x;
-        loc[event.cid].y = event.y;
+        loc[event.cid] = {
+            x: event.x,
+            y: event.y
+        };
 
         // Check the state or if the individual is hidden.
         if(state === 3 || hiddenIndividual[event.cid]) {
@@ -348,7 +349,7 @@ module.exports = function FpsUtils(dispatch) {
     });
 
     dispatch.hook('S_DESPAWN_USER', 2, (event) => {
-        hiddenPlayers[event.target].block = true;
+        delete hiddenPlayers[event.target];
 
         if(state === 3 || hiddenIndividual[event.target]) {
             return false;
@@ -356,10 +357,13 @@ module.exports = function FpsUtils(dispatch) {
     });
 
     dispatch.hook('S_USER_LOCATION', 1, (event) => {
+        // Update locations of every player in case we need to spawn them.
         hiddenPlayers[event.target].x = event.x2;
         hiddenPlayers[event.target].y = event.y2;
         hiddenPlayers[event.target].z = event.z2;
         hiddenPlayers[event.target].w = event.w;
+
+        // Update locations in their seperate objects to track differences with skills.
         loc[event.target].x = event.x2;
         loc[event.target].y = event.y2;
 
@@ -372,6 +376,7 @@ module.exports = function FpsUtils(dispatch) {
         // If state is higher than state1 remove all skill animations.
         if(state == 2 && (event.x - loc[event.source].x > 25 || loc[event.source].x - event.y > 25 || event.y - loc[event.source].y > 25 || loc[event.source].y - event.y > 25)) {
 
+            // Update entity locations for your client.
             dispatch.toClient('S_USER_LOCATION', 1, {
                 target: event.source,
                 x1: loc[event.source].x,
@@ -387,9 +392,11 @@ module.exports = function FpsUtils(dispatch) {
                 unk: 0
             });
 
+            // Update entity locations in differential objects.
             loc[event.source].x = event.x;
             loc[event.source].y = event.y;
 
+            // This is unneeded as the state below should work anyways.
             return false;
         }
         
@@ -399,8 +406,8 @@ module.exports = function FpsUtils(dispatch) {
 
     dispatch.hook('S_ACTION_END', 1, (event) => {
         // If we're removing skill animations we should ignore the end packet too.
-        //if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
-            //return false;
+        if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
+            return false;
     });
 
     dispatch.hook('S_START_USER_PROJECTILE', 1, (event) => {
