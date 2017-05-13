@@ -23,8 +23,7 @@ module.exports = function FpsUtils(dispatch) {
     let state = 0,
         lastState = 0,
         hiddenPlayers = {},
-        hiddenIndividual = {},
-        loc = {};
+        hiddenIndividual = {};
 
     let flags = {
         me: false,
@@ -313,18 +312,12 @@ module.exports = function FpsUtils(dispatch) {
     dispatch.hook('S_LOAD_TOPO', 1, (event) => {
         // Refresh the hide list upon teleport or zone change.
         hiddenPlayers = {};
-        loc = {};
     });
 
     dispatch.hook('S_SPAWN_USER', 3, (event) => {
 
         // Add players in proximity of user to possible hide list.
         hiddenPlayers[event.cid] = event;
-
-        loc[event.cid] = {
-            x: event.x,
-            y: event.y
-        };
 
         // Check the state or if the individual is hidden.
         if(state === 3 || hiddenIndividual[event.cid]) {
@@ -369,44 +362,13 @@ module.exports = function FpsUtils(dispatch) {
         hiddenPlayers[event.target].z = event.z2;
         hiddenPlayers[event.target].w = event.w;
 
-        // Update locations in their seperate objects to track differences with skills.
-        loc[event.target].x = event.x2;
-        loc[event.target].y = event.y2;
-
         if(state > 2 || hiddenIndividual[event.target]) {
             return false;
         }
     });
 
     dispatch.hook('S_ACTION_STAGE', 1, (event) => {
-        // If state is higher than state1 remove all skill animations.
-        if(event.source.toString() !== cid.toString())
-            if(state == 2 && (event.x - loc[event.source].x > 25 || loc[event.source].x - event.y > 25 || event.y - loc[event.source].y > 25 || loc[event.source].y - event.y > 25)) {
-
-                // Update entity locations for your client.
-                dispatch.toClient('S_USER_LOCATION', 1, {
-                    target: event.source,
-                    x1: loc[event.source].x,
-                    y1: loc[event.source].y,
-                    z1: event.z,
-                    w:  event.w,
-                    unk2: 0,
-                    speed: 300,
-                    x2: event.x,
-                    y2: event.y,
-                    z2: event.z,
-                    type: 0,
-                    unk: 0
-                });
-
-                // Update entity locations in differential objects.
-                loc[event.source].x = event.x;
-                loc[event.source].y = event.y;
-
-                // This is unneeded as the state below should work anyways.
-                return false;
-            }
-        
+        // If state is higher than state1 remove all skill animations.    
         if(state > 1 && (hiddenPlayers[event.source] || hiddenIndividual[event.source]))
             return false;
     });
