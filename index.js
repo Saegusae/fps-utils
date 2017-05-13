@@ -346,7 +346,7 @@ module.exports = function FpsUtils(dispatch) {
     });
 
     dispatch.hook('S_DESPAWN_USER', 2, (event) => {
-        delete hiddenPlayers[event.target];
+        hiddenPlayers[event.target].block = true;
 
         if(state === 3 || hiddenIndividual[event.target]) {
             return false;
