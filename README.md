@@ -1,6 +1,8 @@
 # fps-utils
 
-  Written for tera-proxy, a free alternative to Berstankel's ZFPS.
+  Written for tera-proxy, a free script filled with features dedicated to improve your fps, in the open world and in dungeons.
+
+  **To support development and me:** I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) please PM me on discord Saegusa#3195 thanks.
 
 ## How to use:
 * Setup tera-proxy by meishuu (https://github.com/meishuu/tera-proxy)
