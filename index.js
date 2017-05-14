@@ -31,13 +31,14 @@ module.exports = function FpsUtils(dispatch) {
             tanks: false,
             healers: false,
             dps: false
-        }
+        },
+        fireworks: false
     };
 
     const classes = config.classes;
 
     function getClass(m) {
-        return (m - 10101) % 100;
+        return (m % 100);
     }
 
     function handleCommands(event) {
@@ -126,6 +127,12 @@ module.exports = function FpsUtils(dispatch) {
                 case "save":
                     saveConfig();
                     break; 
+                // Disable fireworks.
+                case "fireworks":
+                    flags.fireworks = !flags.fireworks;
+                    log('fps-utils toggled fireworks: ' + flags.fireworks);
+                    systemMsg(`toggled fireworks: ${flags.fireworks}`);
+                    break;
                 // Toggle individual classes on and off
                 case "hide":
                     if(command.length < 3) {
@@ -324,6 +331,13 @@ module.exports = function FpsUtils(dispatch) {
         if(state === 3 || hiddenIndividual[event.target]) {
             return false;
         }
+    });
+
+    dispatch.hook('S_SPAWN_NPC', 3, (event) => {
+        if(flags.fireworks) {
+            if(event.id.toString().includes('4925812093')) return false;
+        }
+            
     });
 
     dispatch.hook('S_USER_LOCATION', 1, (event) => {

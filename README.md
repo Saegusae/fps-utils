@@ -2,7 +2,7 @@
 
   Written for tera-proxy, a free script filled with features dedicated to improve your fps, in the open world and in dungeons.
 
-  **To support development and me:** I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) please PM me on discord Saegusa#3195 thanks.
+  **To support development and me:** I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) Saegusa/Saegusa-chan or PM me on discord Saegusa#3195 thanks.
 
 ## How to use:
 * Setup tera-proxy by meishuu (https://github.com/meishuu/tera-proxy)
@@ -19,6 +19,7 @@
 * **!fps 1:** enable fps state 1 and remove skill particles and projectiles.
 * **!fps 2:** enable fps state 2 and remove all skill animations.
 * **!fps 3:** enable fps state 3 and remove any and all players from your screen.
+* **!fps fireworks:** toggle fireworks flag (true: fireworks enabled / false: fireworks disabled) to save MASSIVE fps on guild bams and/or trigger Cairu. xd
 * **!fps hide:**
     * **usage:** !fps hide [arg1]
     * **valid arguments:** dps, healers, tanks, any username
