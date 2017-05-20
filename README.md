@@ -2,7 +2,7 @@
 
   Written for tera-proxy, a free script filled with features dedicated to improve your fps, in the open world and in dungeons.
 
-  ~**To support development and me:**~ ~~I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) Saegusa/Saegusa-chan or PM me on discord Saegusa#3195 thanks.~~
+  **To support development and me:** ~~I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) Saegusa/Saegusa-chan or PM me on discord Saegusa#3195 thanks.~~
 
   I now have a [patreon page](https://www.patreon.com/saegusa) where you can show your support, for reminder all my mods will remain 100% free and the free users will keep getting my mods and updates for free. Free.
 
