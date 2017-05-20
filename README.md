@@ -2,7 +2,12 @@
 
   Written for tera-proxy, a free script filled with features dedicated to improve your fps, in the open world and in dungeons.
 
-  **To support development and me:** I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) Saegusa/Saegusa-chan or PM me on discord Saegusa#3195 thanks.
+  ~**To support development and me:**~ ~~I accept any amount of MWA as donations on the EU-Killian server (I have debts to pay off) Saegusa/Saegusa-chan or PM me on discord Saegusa#3195 thanks.~~
+
+  I now have a [patreon page](https://www.patreon.com/saegusa) where you can show your support, for reminder all my mods will remain 100% free and the free users will keep getting my mods and updates for free. Free.
+
+### ps.
+The commands list here is for the next update which will be FpsUtils3, some will work some won't approach with caution, and yes !fps 2 is still a meme, using is not advised.
 
 ## How to use:
 * Setup tera-proxy by meishuu (https://github.com/meishuu/tera-proxy)
@@ -11,33 +16,19 @@
 * Now you have access to fps-utils commands
 
 ## Commands:
-* **!fps:**
-    * **usage:** !fps [arg] [opt. arg2]
-    * **valid arguments:** 0, 1, 2, me, show, hide, help
-    * **description:** Toggles between fps-utils states to interact with the game client in various ways to improve fps, input 0 as argument to disable.
-* **!fps 0:** disable main states, and spawn all non-blocked players.
-* **!fps 1:** enable fps state 1 and remove skill particles and projectiles.
-* **!fps 2:** enable fps state 2 and remove all skill animations.
-* **!fps 3:** enable fps state 3 and remove any and all players from your screen.
-* **!fps fireworks:** toggle fireworks flag (true: fireworks enabled / false: fireworks disabled) to save MASSIVE fps on guild bams and/or trigger Cairu. xd
-* **!fps hide:**
-    * **usage:** !fps hide [arg1]
-    * **valid arguments:** dps, healers, tanks, any username
-    * **description:** Hide a certain role or any user individually
-* **!fps show:**
-    * **usage:** !fps show [arg1]
-    * **valid arguments:** dps, healers, tanks, any username
-    * **description:** see fps-hide
-* **!fps list:**
-    * **usage:** !fps list
-    * **description:** List individual players you're currently hiding with !fps hide
+
+Command | Argument(s) | Usage | Alias* | Description
+---|---|---|---|---
+!fps | 0, 1, 2, 3 | !fps [state] | --- | Sets the current fps-utils oprtimization state. Check further in the notes for the states' details.
+!fps | fireworks | !fps fireworks | firework, fireworks, fw | Enables/Disables hiding of firework entities in open world (true = shown / false = hidden)
+!fps | hide | !fps hide [args] | hide, delete, h | Takes *dps*, *healers*, *tanks* or *any username* as a sub argument, tries to hide all respective characters of said specifics off the screen.
+!fps | show | !fps show [args] | show, s | Again takes *healers*, *tanks* or *any username* as a sub argument, tries to show all hidden characters of said specifics on the screen.
+!fps | list | !fps list | list, l | Prints a list of characters currently hidden by *hide* command to chat.
+!fps | save | !fps save | save, config | Saves your current settings to the configuration file for the next launch.
 
 
 ## Work In Progress:
 * Overall improvements.
 * Save configuration upon exit to remember last state.
 * button toggle between fps states 0-1-2-3
-
-## Notes:
-
-Apparently !fps 2 mode is bugged somewhat in the current version, I am working on fixes to the desyncing issues that come with it.
+* Revive !fps 2 to it's full glory and screw this "2 IS A MEME" gaem.
