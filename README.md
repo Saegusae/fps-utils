@@ -19,12 +19,12 @@ The commands list here is for the next update which will be FpsUtils3, some will
 
 Command | Argument(s) | Usage | Alias* | Description
 ---|---|---|---|---
-!fps | 0, 1, 2, 3 | !fps [state] | --- | Sets the current fps-utils oprtimization state. Check further in the notes for the states' details.
-!fps | fireworks | !fps fireworks | firework, fireworks, fw | Enables/Disables hiding of firework entities in open world (true = shown / false = hidden)
-!fps | hide | !fps hide [args] | hide, delete, h | Takes *dps*, *healers*, *tanks* or *any username* as a sub argument, tries to hide all respective characters of said specifics off the screen.
-!fps | show | !fps show [args] | show, s | Again takes *healers*, *tanks* or *any username* as a sub argument, tries to show all hidden characters of said specifics on the screen.
-!fps | list | !fps list | list, l | Prints a list of characters currently hidden by *hide* command to chat.
-!fps | save | !fps save | save, config | Saves your current settings to the configuration file for the next launch.
+**!fps** | 0, 1, 2, 3 | !fps [state] | --- | Sets the current fps-utils oprtimization state. Check further in the notes for the states' details.
+**!fps** | fireworks | !fps fireworks | firework, fireworks, fw | Enables/Disables hiding of firework entities in open world (true = shown / false = hidden)
+**!fps** | hide | !fps hide [args] | hide, delete, h | Takes *dps*, *healers*, *tanks* or *any username* as a sub argument, tries to hide all respective characters of said specifics off the screen.
+**!fps** | show | !fps show [args] | show, s | Again takes *healers*, *tanks* or *any username* as a sub argument, tries to show all hidden characters of said specifics on the screen.
+**!fps** | list | !fps list | list, l | Prints a list of characters currently hidden by *hide* command to chat.
+**!fps** | save | !fps save | save, config | Saves your current settings to the configuration file for the next launch.
 
 
 ## Work In Progress:
