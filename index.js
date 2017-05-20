@@ -1,5 +1,5 @@
 /*
-//  FpsUtils revision1.2 - Saegusa
+//  FpsUtils revision1.3 - Saegusa
 //  New iterations through player objects,
 //  Should be around 3x faster in process speed.
 //  Also added a bunch more commands and functions
@@ -334,8 +334,9 @@ module.exports = function FpsUtils(dispatch) {
     });
 
     dispatch.hook('S_SPAWN_NPC', 3, (event) => {
-        if(flags.fireworks) {
-            if(event.id.toString().includes('4925812093')) return false;
+        if(!flags.fireworks) {
+            if(event.huntingZoneId === 1023 && (event.templateId === 60016000 || event.templateId === 80037000))
+                return false;
         }
             
     });
